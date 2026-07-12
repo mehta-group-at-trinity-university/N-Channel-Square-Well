@@ -79,7 +79,7 @@ Program main
   use DataStructures
   implicit none
   external SBrody
-  double precision de, dB,blo,bhi,elo, ehi, xx1, time1, time2, tloop
+  double precision de, dB,blo,bhi,elo, ehi, xx1, time1, time2, tloop,ei,ef
   double precision BCE,BCO,cdlength,gocmin,gocmax,dgoc,goc,gccmin,gccmax,vopen,Boffset,diffE,atl,atr,abgr,abgl
   double precision DBClosedWindow,DBOpenRes,DVClosedWindow,goctemp,dBins,te1,te2,timedelayold
   double precision, allocatable :: Bins(:),FitBins(:), ensavgd(:,:),ensavgwidth(:,:)
@@ -136,10 +136,14 @@ Program main
      gccscale(1) = gccmax
   endif
   if(ne.gt.1) then
+     ei = log(elo)
+     ef = log(ehi)
      de=(ehi-elo)/(ne-1) !for linear grid
+     !de=(ef-ei)/(ne-1) !for log grid
      diffE = de/100d0
+    
      do ie = 1,ne
-        !         energy(ie) = exp(ei+de*(ie-1)) ! log grid
+       ! energy(ie) = exp(ei+de*(ie-1)) ! log grid
         energy(ie) = elo+de*(ie-1) !linear grid
 !        write(6,*) ie, energy(ie)
      end do
@@ -189,6 +193,8 @@ Program main
   do iens = 1, nens
      call rgnf_lux(V0%eoffset,NumClosed)
      call sort(NumClosed,V0%eoffset)
+     !V0%eoffset = log(elo) + V0%eoffset*log(ehi) !for log scale
+     !V0%eoffset = exp(V0%eoffset) ! for log scale
      V0%eoffset = V0%eoffset*DVClosedWindow
      call makeVNew(NumChan,NumOpen,NumEven,vopen,BCE,BCO,V0%eoffset,&
           V0%V,V0%ethresh)
@@ -199,8 +205,8 @@ Program main
               Varray(iens,icoup)%V(i,j) = gccscale(icoup)*V0%V(i,j)
               Varray(iens,icoup)%V(j,i) = gccscale(icoup)*V0%V(j,i)
            enddo
-           Varray(iens,icoup)%V(i,NumChan) = gocscale(icoup)
-           Varray(iens,icoup)%V(NumChan,i) = gocscale(icoup)
+           Varray(iens,icoup)%V(i,NumChan) = gocscale(icoup)*V0%V(i,NumChan)
+           Varray(iens,icoup)%V(NumChan,i) = gocscale(icoup)*V0%V(NumChan,i)
         enddo
 !        call rgnf_lux(Varray(iens,icoup)%eoffset,NumClosed)
         !do i = 1, NumClosed
@@ -214,6 +220,12 @@ Program main
 !        call makeVOld(NumChan,NumOpen,NumEven,vopen,BCE,BCO,gocscale(icoup),gccscale(icoup),VArray(iens,icoup)%eoffset,&
 !             VArray(iens,icoup)%V,VArray(iens,icoup)%ethresh)
 !        call makeVTridiag(NumChan,NumOpen,1000d0,1000d0,300d0,VArray(iens,icoup)%V,VArray(iens,icoup)%ethresh)
+! The general GOE-ensemble path above (scaling V0%V by gccscale/gocscale) is what produced the
+! published N=41 Brody-statistics figures (Sec. V of PRA 98, 062703).
+! To instead reproduce the Sec. IV pedagogical N=3 tridiagonal example (Figs. 2-3), uncomment:
+!        call makeVTridiag(NumChan,NumOpen,50d0,200d0,5d0,VArray(iens,icoup)%V,VArray(iens,icoup)%ethresh)
+! and loosen the resonance-selection threshold below from 4.0d0 to 0.0d0 (the N=3 case has fewer,
+! less sharp resonances than the N=41 ensemble).
      enddo
   enddo
 
@@ -257,7 +269,6 @@ Program main
               if( ((solarray(iens,icoup,iB,ie-1)%dtaude*solarray(iens,icoup,iB,ie)%dtaude).lt.0d0)&
                    .and. ((solarray(iens,icoup,iB,ie)%dtaude-solarray(iens,icoup,iB,ie-1)%dtaude).lt.0d0)) then
 
-
                  ResTemp%iel = ie-1
                  ResTemp%ier = ie
                  ResTemp%el = energy(ie-1)
@@ -273,8 +284,9 @@ Program main
                  call FindResPos(iens,Bfield(ib),mass,rmatch,L,NumChan,NumClosed,&
                       ResTemp,Vshifted,solarray(iens,icoup,iB,ie-1))
                  ! select only real resonances (peaks in the time delay, not minima, and not weak maxima)
-                 
-                 if (log(ResTemp%timedelay).gt.1d0) then
+                 ! threshold 4.0d0 is tuned for the N=41 GOE ensemble; use 0.0d0 for the N=3
+                 ! tridiagonal pedagogical example (see comment near makeVTridiag above)
+                 if (log(ResTemp%timedelay).gt.4.0d0) then
                     numres = numres + 1
                     Res(iens,icoup,iB,numres)=ResTemp
                     write(800,14) iB,iens,icoup,numres, Res(iens,icoup,iB,numres)%eres, Res(iens,icoup,iB,numres)%zclose,&
@@ -578,8 +590,8 @@ subroutine EnergyPoint(rmatch,L,mass,energy,n,nc,V,sol)
 
   !--------------------------------------------------------
   ! comment/uncomment for zclose
-  !  call makePSI(mass,L,energy,V%Lambda,V%U,amp,aclose,bcoef,cd,sd,n,V%ethresh)  !Comment out if you want to skip the lengthy zclose calculation
-  !   sol%zclose=sum(amp) !sum up the closed channel amplitudes
+    call makePSI(mass,L,energy,V%Lambda,V%U,amp,aclose,bcoef,cd,sd,n,V%ethresh)  !Comment out if you want to skip the lengthy zclose calculation
+     sol%zclose=sum(amp) !sum up the closed channel amplitudes
   !--------------------------------------------------------
   call background(energy,sol%bgphase,n,V%V) !this just performs a single-channel calcualtion on the open channel (neglecting all closed channels.)
   sol%abg = -tan(sol%bgphase)/sqrt(2d0*mass*energy)  
@@ -955,10 +967,10 @@ subroutine makeVOld(NumChan,NumOpen,NumEven,vopen,BCE,BCO,gco,gcc,eoffset,Vmat,e
 !  write(6,*) "press enter to continue..."
 !  read(*,*)
   !Now set the open-closed coupling separately
-  do i = 1, NumChan-NumOpen
-     vmat(i,NumChan) = gco
-     vmat(NumChan,i) = gco
-  enddo
+!  do i = 1, NumChan-NumOpen
+!     vmat(i,NumChan) = gco
+!     vmat(NumChan,i) = gco
+!  enddo
 
   !!$  do i = 1,NumChan - NumOpen
 !!$     do j = 1,NumChan - NumOpen
@@ -1037,6 +1049,7 @@ subroutine makeVNew(NumChan,NumOpen,NumEven,vopen,BCE,BCO,eoffset,Vmat,ethresh)
      ethresh(i) = 0.d0
      write(6,*) "Vmat-diag-open",i,Vmat(i,i),ethresh(i)!, eoffset(i)
   enddo
+
 !  write(6,*) "press enter to continue..."
 !  read(*,*)
   !Now set the open-closed coupling separately
@@ -1187,7 +1200,7 @@ subroutine makePSI(mass,L,energy,Lambda,U,Amp,aclose,bcoef,cd,sd,n,ethresh)
   norm=1d0/sqrt(cd*cd+sd*sd) !normalize the open channel amplitude
   amp=0d0
   rinit=0.01d0
-  rfin=Rmatch*1.5d0 ! increase if there are very weakly closed channels
+  rfin=Rmatch*2.5d0 ! increase if there are very weakly closed channels
   !  xx=-minval(Lambda)+eth1
   xx=-minval(Lambda)+ethresh(1)
   dr=6.3d0/sqrt(2d0*mass*xx)/20d0
@@ -1209,7 +1222,7 @@ subroutine makePSI(mass,L,energy,Lambda,U,Amp,aclose,bcoef,cd,sd,n,ethresh)
            !psi(i)=norm*aclose(i)*exp(-kc*(r-rmatch+1d0))  !  CLOSED PSI r>Rmatch
 
            !replace the above with the sqrt(x)*besselK
-           xscale=0d0!kappa(i)*rmatch
+           xscale=kappa(i)*rmatch
            x=kappa(i)*r
            if(x.le.0.d0) then
               write(6,*) 'sending bad argument to Mysphbesik, i, kappa(i), r, x = ', i,kappa(i),r,x
@@ -1635,7 +1648,7 @@ subroutine SBrody(l,x,y,A)
   
   return
 end subroutine SBrody
-
+!****************************************************************************************************
 subroutine MeanStDev(Data,n,Mean,Variance,StdDev)
   implicit none
   integer n, i
@@ -1651,7 +1664,7 @@ subroutine MeanStDev(Data,n,Mean,Variance,StdDev)
   DO i = 1, n
      Variance = Variance + (Data(i) - Mean)**2
   END DO
-  Variance = Variance / dble(n - 1)
-  StdDev   = SQRT(Variance)            ! compute standard deviation
+  StdDev = Variance / dble(n - 1)
+  StdDev   = SQRT(StdDev)            ! compute standard deviation
   
 end subroutine MeanStDev

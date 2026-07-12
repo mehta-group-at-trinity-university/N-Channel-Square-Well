@@ -1,11 +1,11 @@
 #elo,		ehi,		ne		blo		bhi		nb	nens	ncoup
-0.0001d0	9.9999d0 	1000		0.d0		10d0		1	100	40
+1d-5		1d-1	 	30000		0.d0		10d0		1	100	50
 # N,	NumEven		mass, 			Rmatch		L	NumBins
-11	10		0.5d0			1d0		0	20
+41	40		0.5d0			1d0		0	20
 #BCE,		BCO		gocmin,		gocmax		gccmin,		gccmax		cdlength	vopen
-10.d0 		10.d0		0.1d0		0.1d0          0.001d0		1.d0		5d0		2.0d0
+10.d0 		10.d0		1d-3		1d-3          1d-5		1.0d-2		5d0		2.0d0
 #DVClosedWindow DBClosedWindow  DBOpenRes    Boffset
-10d0		10d0		50d0	     75d0
+1d-1		10d0		50d0	     75d0
 #Write All Spectra Flag (!only set to 1 if nens*ncoup*nb < 100)
 0
 

@@ -1,0 +1,17 @@
+# build artifacts
+*.o
+*.mod
+ssnew.x
+i_seed_rng_bk
+
+# runtime output (regenerate by running ssnew.x)
+fort.*
+
+# large reference data + analysis notebooks, kept locally alongside the
+# build for convenience but not tracked (regenerable / not source)
+validated-run-N41/
+tridiagonal-example-run/
+plots/
+makeScatStatPlotsv3.nb
+MakeChrisTicnorPlots.nb
+MyNchannelSqrWell-Kmat.nb
