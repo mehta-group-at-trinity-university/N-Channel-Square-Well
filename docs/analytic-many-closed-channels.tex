@@ -1,0 +1,260 @@
+\documentclass[twocolumn,showpacs,amsmath,amssymb]{revtex4}
+%\documentclass[preprint,showpacs,preprintnumbers,amsmath,amssymb]{revtex4}
+\usepackage{graphicx}
+%\usepackage{rotating}
+\begin{document}
+\title {Analytic scattering model with many closed channels}
+\author{Christopher Ticknor}
+\affiliation{Theoretical Division, Los Alamos National Laboratory, Los Alamos, New Mexico 87545, USA}
+\affiliation{Kavli Institute of Theoretical Physics, University of California,
+Santa Barbara, Santa Barbara, California 93106, USA}
+\date{\today}
+\begin{abstract}
+We present results from an N channel finite square well scattering model 
+where only one channel is open.
+By using spatially independent couplings are short range, 
+the scattering is nearly analytic and the density of states can be tuned.
+This allows for direct comparison between RMT and scattering results.  
+Such models has important implications for molecular scattering. 
+\end{abstract}
+%\pacs{03.75Hh,67.85-d}
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+I have tried to say everything that is needed to setup the scattering problem. 
+It is rather dense...
+
+Study simple model and see what happens when one
+has many closed channels.
+This model can be used gain an understanding of highly resonant scattering.
+
+One more important addition is the two length scale model.
+This will strongly mix the bound state's character.
+
+Then compare to RMT theory.   
+
+\section{The model}
+This is a simple N square well model with 
+$N$ channels only one of which is open.
+This is a generalization of the 2 channel square well from
+Ref.  [PHYSICAL REVIEW A,  65, 053617].
+
+An interesting feature to this model is that there is an eigenbasis
+at short range. What this means is that the DOS/bound states will 
+not be strongly coupled. Their "coupling" only occurs at $R$ where 
+they are closed. So they spectrum this model generates, might not
+have the properties we want. A way to over come this is to make
+the model a multi-step square well, or add another length scale to the problem. 
+This way there will another step that totally scrambles the states and therefore should make the DOS or bound states spectrum strongly coupled. 
+
+It is composed of kinetic and potential energy terms
+\begin{eqnarray}
+[T_{ij}+V_{ij}(r)]\psi_j(r)=E \psi_{i}(r)
+\end{eqnarray}
+Where $T_{ij}=-{\hbar^2 \over2m} {\nabla^2}\delta_{ij}$
+is the kinetic energy operator and $i=\{c,o\}$ denotes the set of closed channels and the open channel.
+$T$ is diagonal in open/closed channel space, this enforced with Kronecker delta. 
+We will pick the units so that $\hbar$ is 1
+and $m$ is set to 1 (this can be changed easily). 
+
+The parameters that define the model are
+$R$, the width of the potential well;
+$C_{ij}$, the coupling between channels;
+$D_i$, the depths of the potential wells;
+$\Delta_i$, the closed threshold energy; and
+$E$, the scattering energy and wavenumber $k_o=\sqrt{2mE}$.
+We are able to tune the density of states with good chooses of
+$R$, $C_{ij}$ and $D_j$.
+
+The interaction for $r<R$ is
+\begin{eqnarray}
+V_{ii}(r)=-D_i
+\\\nonumber
+V_{ij}(r)=C_{ij}.
+\end{eqnarray}
+For $r>R$, it is
+\begin{eqnarray}
+V_{ii}(r)=\Delta_i\delta_{ic}
+\\\nonumber
+V_{ij}=0.
+\end{eqnarray}
+Here $\delta_{ic}$ is 1 when $i$
+is a closed channel and zero otherwise. 
+For all cased considered $C_{ij}$ is symmetric and real.
+
+We can pick the orbital angular momentum of this problem and add a centrifugal 
+barrier simply by changing the matching functions. This leads to another
+parameters: $L$.  The barrier height is $L(L+1)/2mR^2$ and this can be tuned.
+
+The interaction matrix, $V_{ij}$, is an $N\times N$ matrix, which is diagonalized. 
+From this we get the eigenvalues: $\epsilon_\alpha$.  Furthermore, 
+the eigenvectors can be used to form a frame transformation matrix, $U_{i\alpha}$, that defines how one transforms between the eigenbasis ($\alpha$) to the open/closed basis ($i$).
+
+The wavefunctions for $r<R$ are Riccati-Bessel functions ($f_\alpha$) with
+wave number $k_\alpha=\sqrt{2m\epsilon_\alpha}$.
+Then the wavefunction  is $\phi_{i\alpha}(r)=U_{i\alpha}f_\alpha(r)$ for the $\alpha$ solution.
+
+First we will setup the general equations before reformatting them to be solved.
+To correctly solve the full problem, we must take a linear combination of
+the inside wavefunctions so that they smoothly match to both the decaying 
+wavefunctions outside of $R$ 
+and have the desired scattering boundary conditions for the open channel.
+For $L=0$, the equations we need to solve for a closed channel ($c$) are 
+$\sum_\alpha b_\alpha \phi_{c\alpha}(R)=a_c e^{-k_c R}$ and
+$\sum_\alpha b_\alpha \phi_{c\alpha}^\prime(R)=- a_c k_c e^{-k_c R}$
+where $k_c=\sqrt{2m(\Delta_c-E)}$. 
+Here $b_\alpha$ are the coefficients denoting the linear combination of
+the inside wavefunctions
+and $a_c$ is the amplitude of the closed channel.
+
+In matrix form, the equations are:
+\begin{eqnarray}
+\Phi_{m\alpha} b_\alpha= \Psi_{mj} a_j.
+\end{eqnarray}
+$\Phi_{m\alpha}$ is $2N\times N$ matrix made up of 
+all $N$ channels plus $N$ radial derivates for each channel.
+$\Phi_{m\alpha}$ is made up of 
+$\phi_{i\alpha}(R)$ and $\phi^\prime_{i\alpha}(R)$.
+$m$ is an index the encompasses both $i$
+and the radial derivative and therefore index $m$ ranges 1 and $2N$.  
+$\alpha$ covers all $N$ eigenstates.
+So a column of $\Phi_{m\alpha}$ is
+$\{\phi_{1\alpha}(R),\phi^\prime_{1\alpha}(R),
+\phi_{2\alpha}(R),\phi^\prime_{2\alpha}(R),...,
+\phi_{N\alpha}(R),\phi^\prime_{N\alpha}(R)\}^T$.
+
+$\Psi_{mj}$ is a matrix the contains the correct physics behavior 
+outside of $R$. It is an $2N\times (N+1)$ matrix for an $N$ channel problem with one open channel.
+There is an extra coefficient for the open channel scattering boundary condition. 
+For the closed channels, $\Psi_{mc}=g_c$ 
+where $g_c$ is the decaying function for $c^{th}$ closed channel.
+For the open channel, we have
+$\Psi_{mo}=c f_o- s g_o$ and $\Psi_{mo+1}^\prime =c f_o^\prime - s g_o^\prime$
+where $f_o$ ($g_o$) is the regular (irregular) scattering function that are
+the Riccati-Bessel functions.
+$c$ and $s$ combine to make $s/c=\tan(\delta)$ where $\delta$ is the scattering phase shift. So a column of $\Psi_{m1}$ for the first closed channel is
+$(g_{1}(R),g_1^\prime(R),0,..., 0,0)^T$.
+For the open channel, we have
+ $\Psi_{m,N}$ is
+ $\{0,0,...,0,f_{o}(R),f_o^\prime(R)\}^T$
+and $\Psi_{m,N+1}$ is
+$\{0,0,...,0,g_{o}(R),g_o^\prime(R)\}^T$.
+Note, we have picked the open channel to the $N^{th}$ channel.
+
+%For the general problem of more open channels one must.
+%We will use the 
+
+The unknowns are $b_\alpha$ and $a_j$.
+$b_\alpha$ are the coefficients that tell us how to combine 
+the inside wavefucntions to solve the desired boundary conditions
+specified by $\Psi_j$.
+$a_j$ contains $N-1$ closed channels ($a_c$) amplitudes plus
+the scattering  coefficients ($c$ and $s$) for a total of $N+1$ unknowns. 
+To solve this problem, we must add one more equation so that
+we have $2N+1$ equations for the $2N+1$ unknowns: $b_\alpha$
+and $a_j$ (=$\{a_c, s,c\}$).  We typically take $a_1=1$, but 
+this choice is arbitrary. Alternately, one could just let $c=1$
+and $s$ would become the $\tan(\delta)$.
+
+This can now be set up as standard $Ax=b$ linear solve. 
+Picking one coefficient to be one, makes the $b$ vector to have 
+one element that is 1 and the rest are zero.
+$A$ is $2N+1$ by $2N+1$ matrix.
+It is composed of $\Phi_{m\alpha}$ for the upper left block of $A_{}$.
+The upper right block is $-\Psi_{mj}$, and this forms all but the last row of the matrix.  
+The last row of $A$ is simply all zero except for one element set to one, e.g. picking $a_1$=1 and our indexing scheme, we have $A_{2N+1,N+1}=1$.
+So now one solves for $x$, it is $\{b_\alpha,a_c,c,s\}^T$.
+
+After solving the problem, we can renormalize the final wavefunction
+so that the scattering amplitude is 1 or energy normalized?
+$c^2+s^2=1$.
+Energy normalization is done to reflect the density of states of the scattering 
+wavefunctions. 
+
+With our notation the full wavefunction can be written as: for $r<R$
+\begin{eqnarray}
+\psi_i(r)=\sum_\alpha b_\alpha \phi_{i\alpha}(r)
+\end{eqnarray}
+here $i=\{c,o\}$ and $\phi_{i\alpha}=\sum_\beta U_{i\beta}[\delta_{\beta\alpha}f_\alpha(r)]$.
+For $r>R$ the wavefunction  is:
+\begin{eqnarray}
+&\psi_{c}(r)=a_c g_c(r)
+\\\nonumber
+&\psi_o(r)=c f_o(r)-s g_o(r)  
+\end{eqnarray}
+Here $c$ is a index for all closed channels.
+ 
+One important measure is the closed channel amplitude:
+\begin{eqnarray}
+Z=\sum_c \int_0^\infty  |\psi_c(r)|^2 dr.
+\end{eqnarray}
+The scattering cross section is 
+\begin{eqnarray}
+\sigma={4 \pi \over k^2} \sin^2(\delta)
+\end{eqnarray}
+
+We now discuss some standard cases we study in this work for the 
+short range interaction.
+
+{\it Tri-diagonal case}:
+we take all $D_i$ be the same for all channels ($D$).
+For the simplest case, we take $C_{ij}$
+to be constant ($C$) and non-zero when $j=i\pm1$,
+where $j$and $i$ are the channel indices.  
+For the long range interaction we need the scattering energy $\epsilon$ and $\Delta_i$ (also taken to be constant for all channels).
+
+{\it GOE case}: $C_{ij}$ is defined by gaussian orthogonal ensemble. 
+It is a bunch of random numbers, but real and symmetric.
+We usually take all channels to have one depth as well ($D$). 
+
+{\it Perturbatively coupled open/closed case}:
+This is where we solve a general closed channel system and 
+In this case there is a general $C_{ij}$ matrix, and for the closed-closed sub-block
+we can solve the complete bound state problem with $N-1$ closed channels.
+We can then perturbatively couple the known bound, closed channel system to 
+the open channel by adding on $\lambda C_{oc}$ where $o$ and $c$ denote all
+the open and closed channels and $\lambda$ is a parameter that can be tuned 
+form 0 to 1. 
+This allows us to tune a known density of resonances explicitly. 
+It also then allows us to see how coupling to an open channel influences 
+multi-channel molecular bound states.
+
+\section{Two length scale}
+we can introduce another radius $S$ and it has the same basic
+properties of the first well, but they are different. So like different depths
+and off-diagonal channel couplings. 
+Now the eigenbasis is given by matrix $V$ (instead of $U$).
+This scrambles the quantum number numbers and mixes the states
+furthers. much like rotational mixing or some other longer range interaction. 
+
+To solve this problem one would simply take the previous solution
+at short range $\Phi_\alpha(R)$ and use the new basis transformation
+to project this the wavefunction onto the new eigenfunctions at $R$.
+This projection then establishes the boundary condition
+for each channel (and each $\alpha$) to match to the  
+new basis functions. Then we can a propagate the wavefucntion
+in each channel to $S$. At this point we recover the exact same problem
+that we had before, but with a new $\Phi_{m\alpha}$.
+
+
+\section{DOS estimates}
+ 
+Once we have the eigenfunctions in the inner region, we are able to find
+the bound-states if we assume all channels terminate at $R$ (infinite square well). Then we are able easily estimate the resonances.
+We can solve the full problem by correctly searching....
+While not correct, modifications are only slight.
+it is reasonable for large $\Delta$.
+It offers a very good estimate of density of states.
+
+
+\section{Energy dependence}
+
+\begin{figure}%{r}{0.45\textwidth}
+%\includegraphics[width=0.95\columnwidth]{sr0_field.png}
+\caption{The cross section}
+\label{energy1}
+\end{figure}
+
+\bibliography{/Users/cticknor/BIB/coldBIB}{}
+\bibliographystyle{apsrev.bst}
+\end{document}
