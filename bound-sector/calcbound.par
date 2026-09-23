@@ -1,0 +1,14 @@
+Total Channels  Number of channels   order of splines
+       10              10                   5
+               
+Legendre File
+Legendre.dat
+
+alpha  Legendre Points
+ 1.0d0          10
+
+RIntPoints   Rmin   Rmax        mu
+  200      0.0d0   2000.0d0    1.0d0
+
+RNumPoints       NumSectors
+200	             1

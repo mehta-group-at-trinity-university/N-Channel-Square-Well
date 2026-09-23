@@ -1,0 +1,14 @@
+ NumChan   Order
+    10          5
+
+Legendre File
+Legendre.dat
+
+alpha	Legendre Points
+  1d0	  10
+
+  Left   Right	mass
+   0      0	1d0
+
+GridMin     GridMax     xNumPoints
+0.d0       5.d0       100
